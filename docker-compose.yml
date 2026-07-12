@@ -1,0 +1,17 @@
+services:
+  runner:
+    image: ghcr.io/hawaiine/minimal-runner:latest
+    restart: unless-stopped
+    environment:
+      REPO_URL: ${REPO_URL}
+      ACCESS_TOKEN: ${ACCESS_TOKEN}
+      RUNNER_NAME: ${RUNNER_NAME:-iptv-runner}
+      RUNNER_LABELS: ${RUNNER_LABELS:-self-hosted,iptv}
+      RUNNER_GROUP: ${RUNNER_GROUP:-default}
+      EPHEMERAL: ${EPHEMERAL:-false}
+      DISABLE_AUTO_UPDATE: "true"
+    volumes:
+      - runner-work:/_work
+
+volumes:
+  runner-work:
