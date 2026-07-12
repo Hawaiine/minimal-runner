@@ -1,6 +1,6 @@
 services:
   runner:
-    build: .
+    image: ghcr.io/hawaiine/minimal-runner:latest
     restart: unless-stopped
     environment:
       # ⚠️ 先将 # 后面的示例值替换为你的实际值
