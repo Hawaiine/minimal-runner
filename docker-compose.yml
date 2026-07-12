@@ -1,15 +1,19 @@
 services:
   runner:
     image: ghcr.io/hawaiine/minimal-runner:latest
+    # 本地构建测试用:
+    # build: .
     restart: unless-stopped
     environment:
-      REPO_URL: ${REPO_URL}
-      ACCESS_TOKEN: ${ACCESS_TOKEN}
-      RUNNER_NAME: ${RUNNER_NAME:-iptv-runner}
-      RUNNER_LABELS: ${RUNNER_LABELS:-self-hosted,iptv}
-      RUNNER_GROUP: ${RUNNER_GROUP:-default}
-      EPHEMERAL: ${EPHEMERAL:-false}
-      DISABLE_AUTO_UPDATE: "true"
+      # ⚠️ 先将 # 后面的示例值替换为你的实际值
+      # GitHub 仓库地址
+      REPO_URL: https://github.com/Hawaiine/iptv-sources
+      # Personal Access Token（repo 权限，不要引号）
+      ACCESS_TOKEN: ghp_xxxxxxxxxxxx
+      # Runner 名称（可选）
+      RUNNER_NAME: iptv-wuhan
+      # Runner 标签（可选，逗号分隔）
+      RUNNER_LABELS: self-hosted,iptv,china
     volumes:
       - runner-work:/_work
 
