@@ -3,7 +3,7 @@
 # 安装 GitHub Actions Runner
 # 从 GitHub Releases 下载指定版本的 runner 二进制
 
-GH_RUNNER_VERSION=${1:-"2.323.0"}
+GH_RUNNER_VERSION=${1:-"2.335.1"}
 TARGETPLATFORM=${2:-"linux/amd64"}
 
 export TARGET_ARCH="x64"
