@@ -34,7 +34,8 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
 
 # 创建 Python 虚拟环境（避免 PEP 668 限制）
 RUN python3 -m venv /opt/venv && \
-    /opt/venv/bin/pip install --upgrade pip
+    /opt/venv/bin/pip install --upgrade pip && \
+    chown -R 1001:1001 /opt/venv
 
 # 设置 PATH 优先使用 venv
 ENV PATH="/opt/venv/bin:$PATH"
