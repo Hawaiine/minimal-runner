@@ -32,6 +32,13 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     && locale-gen \
     && rm -rf /var/lib/apt/lists/*
 
+# 创建 Python 虚拟环境（避免 PEP 668 限制）
+RUN python3 -m venv /opt/venv && \
+    /opt/venv/bin/pip install --upgrade pip
+
+# 设置 PATH 优先使用 venv
+ENV PATH="/opt/venv/bin:$PATH"
+
 # 创建 runner 用户
 RUN groupadd -g 1001 runner && \
     useradd -mr -d /home/runner -u 1001 -g 1001 runner && \
