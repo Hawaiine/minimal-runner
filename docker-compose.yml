@@ -2,12 +2,10 @@ services:
   runner:
     image: docker.io/barryallen26/minimal-runner:latest
     restart: unless-stopped
+    env_file: .env
     environment:
-      # ⚠️ 先将 # 后面的示例值替换为你的实际值
       # GitHub 仓库地址
       REPO_URL: https://github.com/Hawaiine/iptv-sources
-      # Personal Access Token（repo 权限，不要引号）
-      ACCESS_TOKEN: ghp_xxxxxxxxxxxx
       # Runner 名称（可选）
       RUNNER_NAME: iptv-wuhan
       # Runner 标签（可选，逗号分隔）

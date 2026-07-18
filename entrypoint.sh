@@ -9,8 +9,9 @@
 #   RUNNER_LABELS  - 标签（默认 self-hosted）
 #   RUNNER_GROUP   - 组（默认 default）
 #   EPHEMERAL      - 是否一次性（默认 false）
+#
 
-RUNNER_NAME=${RUNNER_NAME:-$(hostname)}
+RUNNER_NAME=${RUNNER_NAME:-$(hostname 2>/dev/null || echo "runner")}
 RUNNER_LABELS=${RUNNER_LABELS:-"self-hosted"}
 RUNNER_GROUP=${RUNNER_GROUP:-"default"}
 RUNNER_WORKDIR=${RUNNER_WORKDIR:-"/_work"}
@@ -48,6 +49,9 @@ else
   fi
 
   echo "🔧 注册 Runner..."
+  EPHEMERAL_FLAG=""
+  [[ "$EPHEMERAL" == "true" ]] && EPHEMERAL_FLAG="--ephemeral"
+
   ./config.sh \
     --url "$REPO_URL" \
     --token "$REG_TOKEN" \
@@ -57,6 +61,7 @@ else
     --work "$RUNNER_WORKDIR" \
     --replace \
     --unattended \
+    $EPHEMERAL_FLAG \
     $([[ "$DISABLE_AUTO_UPDATE" == "true" ]] && echo "--disableupdate")
 
   echo "✅ Runner 注册成功"
@@ -76,4 +81,5 @@ cleanup() {
 trap cleanup SIGINT SIGTERM
 
 echo "🚀 启动 Runner 监听..."
-exec ./run.sh --startuptype service
+# 不用 exec，保留 trap 在退出时生效
+./run.sh --startuptype service
