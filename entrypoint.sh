@@ -20,11 +20,11 @@ DISABLE_AUTO_UPDATE=${DISABLE_AUTO_UPDATE:-"true"}
 
 # 检查必填变量
 if [[ -z "$REPO_URL" ]]; then
-  echo "❌ 必须设置 REPO_URL"
+  echo "ERROR: REPO_URL not set"
   exit 1
 fi
 if [[ -z "$ACCESS_TOKEN" ]]; then
-  echo "❌ 必须设置 ACCESS_TOKEN"
+  echo "ERROR: ACCESS_TOKEN not set"
   exit 1
 fi
 
@@ -34,9 +34,9 @@ REPO_NAME=$(echo "$REPO_URL" | sed -E 's|https://github.com/([^/]+)/([^/]+).*|\2
 
 # 已注册则跳过
 if [[ -f .runner ]]; then
-  echo "✅ Runner 已注册，跳过配置"
+  echo "Runner already registered, skipping config"
 else
-  echo "🔧 获取 registration token..."
+  echo "Fetching registration token..."
   REG_TOKEN=$(curl -sL -X POST \
     -H "Authorization: Bearer ${ACCESS_TOKEN}" \
     -H "Accept: application/vnd.github+json" \
@@ -44,11 +44,11 @@ else
     | jq -r '.token')
 
   if [[ -z "$REG_TOKEN" || "$REG_TOKEN" == "null" ]]; then
-    echo "❌ 获取 registration token 失败，请检查 ACCESS_TOKEN 权限"
+    echo "Failed to get registration token - check ACCESS_TOKEN permissions"
     exit 1
   fi
 
-  echo "🔧 注册 Runner..."
+  echo "Registering runner..."
   EPHEMERAL_FLAG=""
   [[ "$EPHEMERAL" == "true" ]] && EPHEMERAL_FLAG="--ephemeral"
 
@@ -64,12 +64,12 @@ else
     $EPHEMERAL_FLAG \
     $([[ "$DISABLE_AUTO_UPDATE" == "true" ]] && echo "--disableupdate")
 
-  echo "✅ Runner 注册成功"
+  echo "Runner registered successfully"
 fi
 
 # 退出时自动注销
 cleanup() {
-  echo "🛑 注销 Runner..."
+  echo "Unregistering runner..."
   REMOVE_TOKEN=$(curl -sL -X POST \
     -H "Authorization: Bearer ${ACCESS_TOKEN}" \
     -H "Accept: application/vnd.github+json" \
@@ -80,6 +80,6 @@ cleanup() {
 }
 trap cleanup SIGINT SIGTERM
 
-echo "🚀 启动 Runner 监听..."
+echo "Starting runner listener..."
 # 不用 exec，保留 trap 在退出时生效
 ./run.sh --startuptype service
